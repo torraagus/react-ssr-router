@@ -12,7 +12,7 @@ const NavBar = () => {
     <ul>
       {menu.map((item) => (
         <li key={item.name}>
-          <NavLink activeStyle={{ color: "tomato" }} to={`/${item.path}`}>
+          <NavLink activeStyle={{ color: "tomato" }} exact to={`/${item.path}`}>
             {item.name}
           </NavLink>
         </li>

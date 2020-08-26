@@ -3,8 +3,6 @@ import routes from "./routes";
 import { Route, Switch } from "react-router-dom";
 import NoMatch from "./NoMatch";
 import NavBar from "./NavBar";
-import Home from "./Home";
-import Page1 from "./Page1";
 
 const App = () => {
   return (

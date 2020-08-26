@@ -1,5 +1,4 @@
 import express from "express";
-import path from "path";
 import cors from "cors";
 import { renderToString } from "react-dom/server";
 import App from "../shared/App";
@@ -11,31 +10,31 @@ import routes from "../shared/routes";
 const app = express();
 
 app.use(cors());
-app.use(express.static(path.resolve(__dirname, "public")));
+app.use(express.static("public"));
 
 app.get("*", (req, res, next) => {
-  const activeRoute = routes.find((route) => matchPath(req.url, route)) || {};
+	const activeRoute = routes.find((route) => matchPath(req.url, route)) || {};
 
-  const promise = activeRoute.fetchInitialData
-    ? activeRoute.fetchInitialData(req.path)
-    : Promise.resolve();
+	const promise = activeRoute.fetchInitialData
+		? activeRoute.fetchInitialData(req.path)
+		: Promise.resolve();
 
-  promise
-    .then((data) => {
-      const context = { obj: "not-null" };
-      const markup = renderToString(
-        <StaticRouter location={req.url} context={context}>
-          <App />
-        </StaticRouter>
-      );
+	promise
+		.then((data) => {
+			const context = { name: "Marcos", age: 29, married: false };
+			const markup = renderToString(
+				<StaticRouter location={req.url} context={context}>
+					<App />
+				</StaticRouter>
+			);
 
-      res.send(`
+			res.send(`
           <!DOCTYPE html>
           <html>
               <head>
                   <title>SSR with RR</title>
                   <script src="/bundle.js" defer></script>
-                  <script>window.__INITIAL_DATA__=${serialize(data)}</script>
+                  <script>window.__INITIAL_DATA__=${serialize(context)}</script>
               </head>
       
               <body>
@@ -43,10 +42,10 @@ app.get("*", (req, res, next) => {
               </body>
           </html>
         `);
-    })
-    .catch(next);
+		})
+		.catch(next);
 });
 
 app.listen(3000, () => {
-  console.log("Server is listening on port 3000");
+	console.log("Server is listening on port 3000");
 });
